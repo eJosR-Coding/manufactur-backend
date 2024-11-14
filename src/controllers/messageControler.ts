@@ -51,17 +51,14 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-
-
-// Retrieve messages by conversation ID
 export const getMessagesByConversation = async (req: Request, res: Response) => {
     const { conversationId } = req.params;
 
     try {
         const messages = await Message.find({ conversation: conversationId })
-            .populate('sender', 'username') // Trae solo el `username` del remitente
+            .populate('sender', 'username')
             .sort({ createdAt: 1 });
-        
+
         res.status(200).json({ success: true, data: messages });
     } catch (error) {
         console.error('Error fetching messages:', error);
@@ -69,13 +66,12 @@ export const getMessagesByConversation = async (req: Request, res: Response) => 
     }
 };
 
-// Download a file attached to a message
 export const downloadMessageFile = async (req: Request, res: Response): Promise<void> => {
     const { fileId } = req.params;
 
     try {
         const file = await bucket.find({ _id: new mongoose.Types.ObjectId(fileId) }).toArray();
-        
+
         if (!file || file.length === 0) {
             res.status(404).json({ success: false, message: 'File not found' });
             return;

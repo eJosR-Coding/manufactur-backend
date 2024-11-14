@@ -8,6 +8,10 @@ export interface IMessage extends Document {
   sender: IUser['_id'];
   content?: string; // Optional for file-only messages
   file?: string; // Stores the GridFS file ID
+  fileMetadata?: {
+    filename: string;
+    contentType: string;
+  };
   createdAt: Date;
 }
 
@@ -17,6 +21,10 @@ const messageSchema = new Schema<IMessage>(
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String },
     file: { type: String }, // Stores GridFS file ID
+    fileMetadata: {
+      filename: { type: String },
+      contentType: { type: String },
+    },
   },
   { timestamps: true }
 );

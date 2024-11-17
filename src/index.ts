@@ -9,6 +9,8 @@ import imageRoutes from './routes/imageRoutes';
 import chatRoutes from './routes/chatRoutes';
 import fileRoutes from './routes/fileRoutes'; // Importa las rutas de archivos
 import messageRoutes from './routes/messageRoutes'; // Importa las rutas de mensajes
+import projectRoutes from "./routes/projectRoutes";
+
 
 dotenv.config();
 
@@ -34,6 +36,7 @@ app.use('/api', imageRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/files', fileRoutes); // Añade las rutas de archivos aquí
 app.use('/api/messages', messageRoutes); // Añade las rutas de mensajes aquí
+app.use("/api/projects", projectRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);

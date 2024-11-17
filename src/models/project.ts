@@ -1,16 +1,5 @@
-// models/project.ts
 import mongoose, { Schema, Document } from "mongoose";
 import { IUser } from "./user";
-
-interface ProjectStage {
-  stageId: mongoose.Types.ObjectId;
-  name: string;
-  status: string;
-  progress: number;
-  expectedCompletion: Date;
-  actualCompletion: Date;
-  comments: StageComment[];
-}
 
 interface StageComment {
   body: string;
@@ -18,12 +7,22 @@ interface StageComment {
   createdAt: Date;
 }
 
+interface ProjectStage {
+  stageId: mongoose.Types.ObjectId;
+  name: string;
+  status: string; // Ejemplo: "pending", "in progress", "completed"
+  progress: number; // Porcentaje de progreso
+  expectedCompletion: Date;
+  actualCompletion: Date;
+  comments: StageComment[]; // Comentarios relacionados a la etapa
+}
+
 export interface IProject extends Document {
   name: string;
   description: string;
   createdBy: mongoose.Types.ObjectId | IUser;
-  teamMembers: mongoose.Types.ObjectId[];
-  stages: ProjectStage[];
+  teamMembers: mongoose.Types.ObjectId[]; // Miembros del proyecto
+  stages: ProjectStage[]; // Etapas del proyecto
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,20 +35,20 @@ const stageCommentSchema: Schema = new Schema({
 
 const projectStageSchema: Schema = new Schema({
   name: { type: String, required: true },
-  status: { type: String, default: "pending" },
-  progress: Number,
+  status: { type: String, default: "pending" }, // Estado inicial "pendiente"
+  progress: { type: Number, default: 0 }, // Progreso inicial en 0%
   expectedCompletion: Date,
   actualCompletion: Date,
-  comments: [stageCommentSchema],
+  comments: [stageCommentSchema], // Comentarios relacionados con esta etapa
 });
 
 const projectSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
-    description: String,
+    description: { type: String, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    teamMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    stages: [projectStageSchema],
+    teamMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Miembros
+    stages: [projectStageSchema], // Etapas
   },
   { timestamps: true }
 );

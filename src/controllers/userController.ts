@@ -78,3 +78,29 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
     }
 };
 
+export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
+    const { userId, username, profile } = req.body;
+
+    if (!userId) {
+        res.status(400).json({ success: false, message: "User ID is required." });
+        return;
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { username, profile },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            res.status(404).json({ success: false, message: "User not found." });
+            return;
+        }
+
+        res.status(200).json({ success: true, data: updatedUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error updating user profile." });
+    }
+};

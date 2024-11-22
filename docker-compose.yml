@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: manufactur-backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://peluchitodev:StrongDevPassword123@20.39.184.54:27017/ManufacturPro?authSource=ManufacturPro
+      CLOUDINARY_URL: cloudinary://236861159599524
+    volumes:
+      - ./backend:/app
+    networks:
+      - manufactur-network
+
+  db:
+    image: mongo:4.4
+    container_name: manufactur-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: peluchitodev
+      MONGO_INITDB_ROOT_PASSWORD: StrongDevPassword123
+    networks:
+      - manufactur-network
+
+networks:
+  manufactur-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
